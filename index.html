@@ -1,23 +1,21 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-
 <meta charset="UTF-8">
 <title>骂死丫的</title>
 
 <style>
 
 body{
+font-family:Arial;
 background:#111;
 color:white;
-font-family:Arial;
 text-align:center;
-margin:0;
 }
 
 h1{
-font-size:40px;
 margin-top:20px;
+font-size:40px;
 }
 
 #game{
@@ -27,7 +25,7 @@ margin:auto;
 
 .bar{
 height:25px;
-border-radius:10px;
+background:red;
 margin:10px 0;
 transition:width 0.5s;
 }
@@ -45,17 +43,16 @@ margin-top:20px;
 }
 
 button{
-padding:10px 16px;
-margin:6px;
+padding:10px 15px;
+margin:5px;
 font-size:16px;
 cursor:pointer;
-border-radius:8px;
+border-radius:6px;
 border:none;
 }
 
 button:hover{
 background:#ddd;
-color:black;
 }
 
 #log{
@@ -65,15 +62,14 @@ overflow:auto;
 background:#222;
 padding:10px;
 text-align:left;
-border-radius:8px;
 }
 
 #gif{
 margin-top:20px;
+height:150px;
 }
 
 </style>
-
 </head>
 
 <body>
@@ -82,16 +78,14 @@ margin-top:20px;
 
 <div id="game">
 
-<h3>我 的血量</h3>
+<div>我 的血量</div>
 <div class="bar" id="playerBar" style="width:100%"></div>
 
-<h3>张派比 的血量</h3>
+<div>张派比 的血量</div>
 <div class="bar" id="enemyBar" style="width:100%"></div>
 
 <div id="gif">
-
-<img id="gifImg" src="zhangpai.gif" height="150">
-
+<img id="gifImg" src="https://media.giphy.com/media/3o6ZtaO9BZHcOjmErm/giphy.gif" height="120">
 </div>
 
 <div class="choices" id="choices"></div>
@@ -105,100 +99,139 @@ margin-top:20px;
 let playerHP = 100
 let enemyHP = 100
 
-const insults = [
+const baseInsults = [
 
 "你丫哪儿冒出来的",
-"你这脑子进水了吧",
 "瞧你这德行",
+"你这人怎么这么轴",
+"你这脑子是租来的吧",
+"你这嘴比胡同还窄",
+"你这人跟二五八万似的",
+"你这脸皮厚得能挡风",
+"你丫真有两下子",
+"你这话说得跟放炮似的",
+"你这是找骂呢",
+"你丫怎么这么能嘚瑟",
+"你这脑子进水了吧",
+"瞧你这小样儿",
+"你这人真有意思",
+"你这德行也好意思说话",
 "你丫少在这儿贫",
 "你这嘴跟机关枪似的",
 "你这脑回路真清奇",
-"你这脸皮厚得能挡风",
-"你丫怎么这么欠",
-"你这话说得跟放炮似的",
-"你这人跟二五八万似的",
+"你这是哪门子逻辑",
+"你丫真会给自己加戏",
 
-"你这脑袋是摆设吧",
 "你这脸比城墙还厚",
-"你丫怎么这么能嘚瑟",
+"你这脑袋是摆设吧",
+"你这张嘴一天不叭叭难受吧",
+"你这是跟谁学的歪理",
+"你丫怎么这么欠呢",
 "你这话说出来不脸红吗",
-"你这逻辑谁教你的",
-"你这嘴一张准没好话",
-"你丫可真能装",
 "你这人真够可以的",
 "你这脑子是不是落家里了",
-"你这话说出来不嫌丢人",
+"你这嘴一张准没好话",
+"你丫可真能装",
+"你这人怎么这么不靠谱",
+"你这德行还出来混",
+"你这逻辑谁教你的",
+"你这脸皮厚得能防弹",
+"你丫是不是迷路了",
+"你这人一开口就露怯",
+"你这嘴跟机关枪卡壳似的",
+"你这脑回路比地铁还绕",
+"你这德行还挺自信",
+"你丫是真敢说",
 
-"你丫是不是没睡醒",
-"你这脑子跟浆糊似的",
-"你这人一天不嘚瑟难受",
-"你这嘴一天能惹多少事",
+"你这人跟段子似的",
+"你这话说出来不怕雷劈",
+"你这脑袋是不是短路了",
 "你这人一看就不靠谱",
 "你这脸皮能拿去铺路",
-"你这水平也敢出来吆喝",
-"你这逻辑真是绝了",
-"你丫是不是喝多了",
-"你这人跟喜剧似的",
-
-"你这人一天不现眼难受",
+"你丫这水平也敢出来吆喝",
 "你这话跟胡同风似的乱吹",
+"你这人一天不嘚瑟难受",
 "你这脑子跟摆设差不多",
-"你这嘴比喇叭还响",
-"你这德行也敢嚷嚷",
-"你这脑回路比地铁还绕",
-"你这话说得像段子",
-"你丫真会给自己加戏",
-"你这脸皮厚得能防弹",
-"你这话一听就不靠谱",
+"你这张嘴一天能惹多少事",
 
-"你这脑子短路了吧",
-"你这嘴停不下来是吧",
-"你丫一天不找骂难受",
-"你这逻辑真清奇",
+"你丫是不是没睡醒",
 "你这话说得跟梦话似的",
-"你这人跟段子似的",
-"你这脑子摆设一样",
+"你这脑子跟浆糊似的",
+"你这人怎么这么爱现",
 "你这嘴是借来的吧",
-"你这人一开口就露怯",
-"你丫是真敢说"
+"你这逻辑真是绝了",
+"你这人跟喜剧似的",
+"你这德行也敢嚷嚷",
+"你丫是不是喝多了",
+"你这话说出来不嫌丢人"
 
 ]
 
-function randomInsult(){
+let insults=[]
 
-let phrase = insults[Math.floor(Math.random()*insults.length)]
+function generateInsults(){
+
+for(let i=0;i<200;i++){
+
+let phrase = baseInsults[Math.floor(Math.random()*baseInsults.length)]
 
 let score = [10,5,2][Math.floor(Math.random()*3)]
 
-return {phrase,score}
+insults.push({
+phrase: phrase,
+score: score
+})
+
+}
+
+}
+
+generateInsults()
+
+function randomChoices(){
+
+let arr=[]
+
+for(let i=0;i<3;i++){
+
+arr.push(insults[Math.floor(Math.random()*insults.length)])
+
+}
+
+return arr
 
 }
 
 function newTurn(){
 
+let choices = randomChoices()
+
 let div = document.getElementById("choices")
 
 div.innerHTML=""
 
-for(let i=0;i<3;i++){
-
-let choice = randomInsult()
+choices.forEach(c=>{
 
 let btn = document.createElement("button")
 
-btn.innerText = choice.phrase
+btn.innerText = c.phrase
 
-btn.onclick = ()=>attack(choice)
+btn.onclick = ()=>attack(c)
 
 div.appendChild(btn)
 
-}
+})
 
 }
 
 function attack(playerChoice){
 
-let enemyChoice = randomInsult()
+let img = document.getElementById("gifImg")
+img.src = "zhangpai.gif?t=" + new Date().getTime()
+
+let enemyOptions = randomChoices()
+
+let enemyChoice = enemyOptions[Math.floor(Math.random()*3)]
 
 let diff = playerChoice.score - enemyChoice.score
 
@@ -220,6 +253,8 @@ logText(
 "<br>分差："+diff
 )
 
+animate()
+
 checkEnd()
 
 newTurn()
@@ -228,11 +263,21 @@ newTurn()
 
 function updateBars(){
 
-playerHP = Math.max(playerHP,0)
-enemyHP = Math.max(enemyHP,0)
-
 document.getElementById("playerBar").style.width = playerHP+"%"
+
 document.getElementById("enemyBar").style.width = enemyHP+"%"
+
+}
+
+function animate(){
+
+let gifs=[
+"https://media.giphy.com/media/3o6ZtaO9BZHcOjmErm/giphy.gif",
+"https://media.giphy.com/media/l0HlQ7LRalQqdWfao/giphy.gif",
+"https://media.giphy.com/media/xT5LMHxhOfscxPfIfm/giphy.gif"
+]
+
+document.getElementById("gifImg").src = gifs[Math.floor(Math.random()*gifs.length)]
 
 }
 
@@ -248,7 +293,7 @@ function checkEnd(){
 
 if(playerHP<=0){
 
-alert("我被骂趴下了")
+alert("我被骂趴下了！")
 
 location.reload()
 
@@ -256,7 +301,7 @@ location.reload()
 
 if(enemyHP<=0){
 
-alert("张派比被骂死丫的！")
+alert("张派比被骂死丫的！你赢了！")
 
 location.reload()
 
@@ -269,5 +314,4 @@ newTurn()
 </script>
 
 </body>
-
 </html>
